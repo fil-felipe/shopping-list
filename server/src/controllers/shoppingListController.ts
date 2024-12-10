@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import { createShoppingList, getShoppingLists, getShoppingList, updateShoppingList, deleteShoppingList } from '../models/shoppingListModel';
 
-interface errorItem {
-    message?: string
-}
-
 export const createShoppingListHandler = async (req: Request, res: Response ) => {
     try {
         const { name } = req.body;
