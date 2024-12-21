@@ -17,7 +17,7 @@ export const createShoppingItem = async (listId: number, name: string, category:
 }
 
 export const getAllListItems = async (listId: number): Promise<ShoppingItem[]> => {
-    const result = await pool.query('SELECT * FROM shopping_items WHERE list_id = $1', [listId]);
+    const result = await pool.query('SELECT * FROM shopping_items WHERE list_id = $1 ORDER BY item_category, item_name', [listId]);
     return result.rows
 }
 

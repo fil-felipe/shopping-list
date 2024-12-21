@@ -1,10 +1,6 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
 
-import Button from '@mui/material/Button';
-import BottomNavigation from '@mui/material/BottomNavigation';
-
-import { createTheme, useTheme, ThemeProvider  } from '@mui/material/styles';
+import { createTheme, ThemeProvider  } from '@mui/material/styles';
 import { Typography } from '@mui/material';
 
 import './App.css';
@@ -41,8 +37,6 @@ function App() {
     <ThemeProvider theme={theme}>
     <Typography component="span">
     <div className="App">
-    <div>Twoja lista zakupów</div>
-      {/* <header className="App-header"> */}
       <Router>
         <Routes>
           <Route path="/" element={<ShoppingLists />} />

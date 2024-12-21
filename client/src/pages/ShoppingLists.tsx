@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios, {AxiosResponse} from "axios";
 
-interface ListProps {
+import { Grid2, Box, List } from '@mui/material';
+
+import ListHeader from '../components/ListHeader';
+import ShoppingListItem from '../components/ShoppingListItem';
+import AddList from '../components/AddList';
+
+export interface ListProps {
   id: number;
   name: string;
 } 
@@ -9,12 +15,14 @@ interface ListProps {
 const ShoppingLists: React.FC = () => {
   const [allLists, setAllLists] = useState<ListProps[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response: AxiosResponse = await axios.get('http://localhost:5000/api/shopping-list');
-        if (response.status != 200) {
+        if (response.status.toString()[0] !== "2") {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         setAllLists(response.data);
@@ -24,7 +32,7 @@ const ShoppingLists: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, [refreshTrigger]);
 
   if (error) {
     return <p>Error: {error}</p>;
@@ -34,15 +42,35 @@ const ShoppingLists: React.FC = () => {
     return <p>Loading...</p>;
   }
 
+  const refreshLists = () => {
+    setRefreshTrigger((prev) => !prev);
+  }
+
   return (
-    <div>
-      <h1>Twoje listy</h1>
-      <ul>
+    <Grid2
+      container
+      direction="column"
+      justifyContent="center"  // Wyśrodkowanie poziome
+      alignItems="center"       // Wyśrodkowanie pionowe
+      sx={{ height: '100vh' }}   // Pełna wysokość okna
+    >
+      <ListHeader title="Twoje listy" />
+      <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <List>
         {allLists.map((item) => (
-          <li key={item.id}>{item.name}</li>
+          <ShoppingListItem key={item.id} {...item}/>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
+
+      <AddList refreshLists={refreshLists}/>
+    </Grid2>
   );
 };
 

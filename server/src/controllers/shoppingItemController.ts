@@ -3,8 +3,8 @@ import { createShoppingItem, getAllListItems, getSingleItem, updateSingleItem, d
 
 export const createShoppingItemtHandler = async (req: Request, res: Response ) => {
     try {
-        const { name, category, bought } = req.body;
-        const newItem = await createShoppingItem(parseInt(req.params.listId), name, category, bought);
+        const { item_name, item_category, bought } = req.body;
+        const newItem = await createShoppingItem(parseInt(req.params.listId), item_name, item_category, bought);
         res.status(201).json(newItem);
     } catch (error) {
         const e = error as Error;
@@ -38,8 +38,8 @@ export const getSingleItemHandler = async (req: Request, res: Response) => {
 
 export const updateSingleItemHandler = async (req: Request, res: Response) => {
     try {
-        const { name, category, bought } = req.body;
-        const updatedItem = await updateSingleItem(parseInt(req.params.id), name, category, bought);
+        const { item_name, item_category, bought } = req.body;
+        const updatedItem = await updateSingleItem(parseInt(req.params.id), item_name, item_category, bought);
         if (!updatedItem) {
             res.status(404).json({ message: "Item not found"});
             return

@@ -13,7 +13,7 @@ export const createShoppingList = async (name: string): Promise<ShoppingListItem
 }
 
 export const getShoppingLists = async (): Promise<ShoppingListItem[]> => {
-    const result = await pool.query('SELECT * FROM shopping_list');
+    const result = await pool.query('SELECT * FROM shopping_list ORDER BY name');
     return result.rows
 }
 
