@@ -9,6 +9,8 @@ interface AddItemProps {
     refreshList: () => void;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const AddItem: React.FC<AddItemProps> = ({listId, refreshList}) => {
     const [visiblePopUp, setVisiblePopUp] = useState(false);
     const [formData, setFormData] = useState({
@@ -44,7 +46,7 @@ const AddItem: React.FC<AddItemProps> = ({listId, refreshList}) => {
 
     const handleSubmit = async() => {
         try {
-            const response: AxiosResponse = await axios.post(`http://localhost:5000/api/shopping-item/${listId}`, {...formData});
+            const response: AxiosResponse = await axios.post(`${apiUrl}/api/shopping-item/${listId}`, {...formData});
             
             if (response.status.toString()[0] !== "2") {
               throw new Error(`HTTP error! status: ${response.status}`);

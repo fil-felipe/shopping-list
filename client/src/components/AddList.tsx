@@ -7,6 +7,8 @@ interface AddListProps {
     refreshLists: () => void;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const AddList: React.FC<AddListProps> = ({refreshLists}) => {
     const [visiblePopUp, setVisiblePopUp] = useState(false);
     const [formData, setFormData] = useState({
@@ -32,7 +34,7 @@ const AddList: React.FC<AddListProps> = ({refreshLists}) => {
 
     const handleSubmit = async() => {
         try {
-            const response: AxiosResponse = await axios.post(`http://localhost:5000/api/shopping-list`, {...formData});
+            const response: AxiosResponse = await axios.post(`${apiUrl}/api/shopping-list`, {...formData});
             
             if (response.status.toString()[0] !== "2") {
               throw new Error(`HTTP error! status: ${response.status}`);

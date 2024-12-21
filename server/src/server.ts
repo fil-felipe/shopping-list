@@ -8,9 +8,10 @@ import shoppingItemRoutes from './routes/shoppingItemRoutes';
 
 const app = express();
 const port = process.env.PORT || 5000;
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const corsOptions: cors.CorsOptions = {
-    origin: 'http://localhost:3000', // Tylko frontend na localhost:3000
+    origin: apiUrl, // Tylko frontend na localhost:3000
     methods: ['GET', 'POST', 'DELETE', 'PUT'], // Dozwolone metody
     allowedHeaders: ['Content-Type', 'Authorization'], // Dozwolone nagłówki
   };

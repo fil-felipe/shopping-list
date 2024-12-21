@@ -12,6 +12,8 @@ interface DeleteItemProps {
     refreshList: () => void;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const DeleteItem: React.FC<DeleteItemProps> = ({listItem, refreshList}) => {
     const [visiblePopUp, setVisiblePopUp] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -28,7 +30,7 @@ const DeleteItem: React.FC<DeleteItemProps> = ({listItem, refreshList}) => {
     const handleSubmitDelete = async() => {
         setLoading(true);
         try {
-            const response: AxiosResponse = await axios.delete(`http://localhost:5000/api/shopping-item/${listItem.id}`);
+            const response: AxiosResponse = await axios.delete(`${apiUrl}/api/shopping-item/${listItem.id}`);
             
             if (response.status.toString()[0] !== "2") {
               throw new Error(`HTTP error! status: ${response.status}`);

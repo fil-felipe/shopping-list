@@ -12,6 +12,8 @@ export interface ListProps {
   name: string;
 } 
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const ShoppingLists: React.FC = () => {
   const [allLists, setAllLists] = useState<ListProps[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +23,7 @@ const ShoppingLists: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: AxiosResponse = await axios.get('http://localhost:5000/api/shopping-list');
+        const response: AxiosResponse = await axios.get(`${apiUrl}/api/shopping-list`);
         if (response.status.toString()[0] !== "2") {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

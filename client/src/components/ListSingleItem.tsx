@@ -13,12 +13,14 @@ interface ListSingleItemProps {
     refreshList: () => void;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const ListSingleItem: React.FC<ListSingleItemProps> = ({listItem, refreshList}) => {
     const handleBuyClick = async() => {
         try {
             
             listItem.bought = !listItem.bought;
-            const response: AxiosResponse = await axios.put(`http://localhost:5000/api/shopping-item/${listItem.id}`,{...listItem});
+            const response: AxiosResponse = await axios.put(`${apiUrl}/api/shopping-item/${listItem.id}`,{...listItem});
             
             if (response.status.toString()[0] !== "2") {
                 throw new Error(`HTTP error! status: ${response.status}`);

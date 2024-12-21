@@ -19,6 +19,8 @@ export interface ItemProps {
   bought?: boolean;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const ShoppingItems: React.FC = () => {
   const { listId } = useParams<{ listId: string }>();
   const [listName, setListName] = useState("");
@@ -31,7 +33,7 @@ const ShoppingItems: React.FC = () => {
   useEffect(() => {
     const fetchListName = async () => {
       try {
-        const response: AxiosResponse = await axios.get(`http://localhost:5000/api/shopping-list/${listId}`);
+        const response: AxiosResponse = await axios.get(`${apiUrl}/api/shopping-list/${listId}`);
         
         if (response.status.toString()[0] !== "2") {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -49,7 +51,7 @@ const ShoppingItems: React.FC = () => {
   useEffect(() => {
     const fetchListItems = async () => {
       try {
-        const response: AxiosResponse = await axios.get(`http://localhost:5000/api/shopping-item/list/${listId}`);
+        const response: AxiosResponse = await axios.get(`${apiUrl}/api/shopping-item/list/${listId}`);
         
         if (response.status.toString()[0] !== "2") {
           throw new Error(`HTTP error! status: ${response.status}`);
