@@ -66,7 +66,7 @@ const ShoppingLists: React.FC = () => {
     >
       <List>
         {allLists.map((item) => (
-          <ShoppingListItem key={item.id} {...item}/>
+          <ShoppingListItem key={item.id} listItem={item} refreshLists={refreshLists}/>
         ))}
       </List>
     </Box>

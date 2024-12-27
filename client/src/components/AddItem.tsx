@@ -51,6 +51,11 @@ const AddItem: React.FC<AddItemProps> = ({listId, refreshList}) => {
             if (response.status.toString()[0] !== "2") {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
+            setFormData({
+              item_name: '',
+              item_category: '',
+              bought: false
+            });
             refreshList();
           } catch (err) {
             console.error(err instanceof Error ? err.message : 'Unknown error');

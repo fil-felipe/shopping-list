@@ -39,6 +39,7 @@ const AddList: React.FC<AddListProps> = ({refreshLists}) => {
             if (response.status.toString()[0] !== "2") {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
+            setFormData({ name: ''});
             refreshLists();
           } catch (err) {
             console.error(err instanceof Error ? err.message : 'Unknown error');

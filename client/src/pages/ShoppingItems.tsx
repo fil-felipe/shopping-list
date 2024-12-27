@@ -5,8 +5,9 @@ import axios, {AxiosResponse} from "axios";
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
-import { Button } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 
+import LoadingSpinner from '../components/LoadingSpiner';
 import ListSingleItem from '../components/ListSingleItem';
 import ListHeader from '../components/ListHeader';
 import AddItem from '../components/AddItem';
@@ -23,15 +24,18 @@ const apiUrl = process.env.REACT_APP_API_URL;
 
 const ShoppingItems: React.FC = () => {
   const { listId } = useParams<{ listId: string }>();
+  const [loading, setLoading] = useState(false);
   const [listName, setListName] = useState("");
   const [allItems, setAllItems] = useState<ItemProps[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
+  const [visiblePopUpDelete, setVisiblePopUpDelete ] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchListName = async () => {
+      setLoading(true);
       try {
         const response: AxiosResponse = await axios.get(`${apiUrl}/api/shopping-list/${listId}`);
         
@@ -40,6 +44,7 @@ const ShoppingItems: React.FC = () => {
         }
         const name = await response.data.name;
         setListName(name);
+        setLoading(false);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       }
@@ -50,6 +55,7 @@ const ShoppingItems: React.FC = () => {
 
   useEffect(() => {
     const fetchListItems = async () => {
+      setLoading(true);
       try {
         const response: AxiosResponse = await axios.get(`${apiUrl}/api/shopping-item/list/${listId}`);
         
@@ -58,6 +64,7 @@ const ShoppingItems: React.FC = () => {
         }
         const data: ItemProps[] = await response.data;
         setAllItems(data);
+        setLoading(false);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       }
@@ -80,6 +87,37 @@ const ShoppingItems: React.FC = () => {
 
   const handleToLists = () => {
     navigate('/');
+  }
+
+  const handleRemoveBought = () => {
+    setVisiblePopUpDelete(true);
+  }
+
+  const RemoveAllBought = async() => {
+    setLoading(true);
+    const boughtItems: number[] = allItems
+      .filter(item => item.bought === true)
+      .map(item => item.id);
+    try {
+      const response: AxiosResponse = await axios.request({
+        method: 'DELETE',
+        url: `${apiUrl}/api/shopping-item`,
+        data: { idList: boughtItems }, 
+      });
+      
+      if (response.status.toString()[0] !== "2") {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      refreshList();
+      setLoading(false);
+      setVisiblePopUpDelete(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    }
+  }
+  
+  const handleCloseDeletePopUp = () => {
+    setVisiblePopUpDelete(false);
   }
 
   return (
@@ -165,8 +203,26 @@ const ShoppingItems: React.FC = () => {
         >
           Wróć do spisu list
         </Button>
+        <Button 
+          variant="contained" 
+          color="error" 
+          onClick={handleRemoveBought}
+        >
+          Usuń wszystkie kupione
+        </Button>
       </Box>
       </Box>
+      <Dialog open={visiblePopUpDelete} onClose={handleCloseDeletePopUp}>
+          <DialogTitle>Potwierdź usunięcie</DialogTitle>
+          <DialogContent>
+              <DialogContentText>Czy na pewno chcesz usunąć wszystkie kupione produkty?</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+              <Button onClick={handleCloseDeletePopUp} color="secondary">Anuluj</Button>
+              <Button onClick={RemoveAllBought} color="error">Usuń</Button>
+          </DialogActions>
+        </Dialog>
+            <LoadingSpinner isOpen={loading}/> 
     </div>
   );
 };
